@@ -58,6 +58,29 @@
     notify:
       - reload bwc_rbac
 
+  - name: Copy default RBAC mappings to /opt/stackstorm/rbac/mappings directory
+    become: yes
+    template:
+      src: rbac_mappings/mappings.yml.j2
+      dest: /opt/stackstorm/rbac/mappings/{{ item.name }}.yaml
+      owner: st2
+      group: st2
+    with_items: "{{ bwc_rbac_default_mappings }}"
+    notify:
+      - reload bwc_rbac
+
+  - name: Copy user defined RBAC mappings to /opt/stackstorm/rbac/mappings directory
+    become: yes
+    template:
+      src: rbac_mappings/mappings.yml.j2
+      dest: /opt/stackstorm/rbac/mappings/{{ item.name }}.yaml
+      owner: st2
+      group: st2
+    with_items: "{{ bwc_rbac.mappings }}"
+    when: bwc_rbac.mappings is defined
+    notify:
+      - reload bwc_rbac
+
   - name: Enable RBAC in st2 configuration
     become: yes
     ini_file:

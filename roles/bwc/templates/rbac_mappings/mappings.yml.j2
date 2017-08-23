@@ -1,0 +1,5 @@
+---
+  group: "{{ item.group }}"
+  description: "{{ item.description }}""
+  roles:
+    {{ item.permission_grants | to_nice_yaml(2) | indent(2) }}
